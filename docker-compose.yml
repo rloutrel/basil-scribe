@@ -22,7 +22,11 @@ services:
     build: .
     ports:
       - "${WEB_PORT:-8000}:8000"
-    env_file: .env
+    # Optional: copy .env.example to .env to override secrets and
+    # settings. The stack also starts with the defaults below.
+    env_file:
+      - path: .env
+        required: false
     environment:
       DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
       POSTGRES_HOST: db
