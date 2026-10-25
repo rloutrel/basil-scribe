@@ -13,3 +13,15 @@ DATABASES = {
         "NAME": ":memory:",
     }
 }
+
+# The manifest storage expects the collectstatic output to exist; the
+# test suite never serves hashed static URLs, so use the plain
+# compressed storage instead.
+STORAGES = {
+    "default": {
+        "BACKEND": "django.core.files.storage.FileSystemStorage",
+    },
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedStaticFilesStorage",
+    },
+}

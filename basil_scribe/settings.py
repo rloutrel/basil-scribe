@@ -127,7 +127,7 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATICFILES_DIRS = [BASE_DIR / "static"]
-STATIC_ROOT = os.environ.get("DJANGO_STATIC_ROOT", BASE_DIR / "staticfiles")
+STATIC_ROOT = Path(os.environ.get("DJANGO_STATIC_ROOT", BASE_DIR / "staticfiles"))
 
 STORAGES = {
     "default": {
@@ -137,11 +137,6 @@ STORAGES = {
         "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
     },
 }
-
-# Serve the collected static files under /static/ even when DEBUG=False
-# (gunicorn does not serve static files by itself).
-WHITENOISE_USE_FINDERS = False
-WHITENOISE_AUTOREFRESH = DEBUG
 
 LOGIN_URL = "admin:login"
 LOGIN_REDIRECT_URL = "drafts:home"
