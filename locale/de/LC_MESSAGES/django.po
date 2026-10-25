@@ -465,3 +465,12 @@ msgstr "Läuft"
 
 msgid "Generated text"
 msgstr "Erzeugter Text"
+
+msgid "Instructions for this reply (optional)"
+msgstr "Anweisungen für diese Antwort (optional)"
+
+msgid "e.g. mention the annual general meeting, stay brief…"
+msgstr "z. B. die Mitgliederversammlung erwähnen, kurz bleiben…"
+
+msgid "Instructions"
+msgstr "Anweisungen"

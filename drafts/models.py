@@ -29,6 +29,9 @@ class GenerationTask(models.Model):
     )
     request_type = models.CharField(_("Request type"), max_length=120)
     request_text = models.TextField(_("Request text"))
+    instructions = models.TextField(
+        _("Instructions"), blank=True, default=""
+    )
     recipient_name = models.CharField(
         _("Recipient name"), max_length=255, blank=True, default=""
     )
@@ -73,6 +76,9 @@ class Draft(models.Model):
     )
     request_type = models.CharField(_("Request type"), max_length=120)
     request_text = models.TextField(_("Request text"))
+    instructions = models.TextField(
+        _("Instructions"), blank=True, default=""
+    )
     recipient_name = models.CharField(
         _("Recipient name"), max_length=255, blank=True, default=""
     )

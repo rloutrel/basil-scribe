@@ -49,6 +49,7 @@ def generate(request):
     request_type = request.POST.get("request_type") or ""
     recipient_name = (request.POST.get("recipient_name") or "").strip()
     request_date = (request.POST.get("request_date") or "").strip()
+    instructions = (request.POST.get("instructions") or "").strip()
     if not request_text:
         messages.error(request, _("Please paste the text of the request."))
         return redirect("drafts:home")
@@ -62,6 +63,7 @@ def generate(request):
         request_text,
         recipient_name=recipient_name,
         request_date=request_date,
+        instructions=instructions,
     )
     request.session["active_task_id"] = task.pk
     return redirect("drafts:home")
@@ -94,6 +96,7 @@ def regenerate(request):
     precedents = payload.get("precedents_used") or []
     if precedents and not exclude:
         exclude = [str(precedents[0].get("id"))]
+    instructions = (request.POST.get("instructions") or "").strip()
 
     task = submit(
         profile,
@@ -102,6 +105,7 @@ def regenerate(request):
         recipient_name=payload.get("recipient_name", ""),
         request_date=payload.get("request_date", ""),
         exclude_precedent_ids=exclude,
+        instructions=instructions,
     )
     request.session["active_task_id"] = task.pk
     return redirect("drafts:home")
@@ -118,6 +122,7 @@ def task_status(request, pk):
             "request_type": task.request_type,
             "recipient_name": task.recipient_name,
             "request_date": task.request_date,
+            "instructions": task.instructions,
             "precedents_used": task.precedents_used,
         }
     return render(

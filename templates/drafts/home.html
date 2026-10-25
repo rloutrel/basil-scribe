@@ -22,6 +22,9 @@
     </select>
     <label for="id_request_text">{% trans "Request received" %}</label>
     <textarea name="request_text" id="id_request_text" rows="8" required></textarea>
+    <label for="id_instructions">{% trans "Instructions for this reply (optional)" %}</label>
+    <textarea name="instructions" id="id_instructions" rows="3"
+              placeholder="{% trans 'e.g. mention the annual general meeting, stay brief…' %}"></textarea>
     <div class="two-cols">
       <div>
         <label for="id_recipient_name">{% trans "Recipient name (optional)" %}</label>

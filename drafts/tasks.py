@@ -39,7 +39,7 @@ def start_pool():
 
 
 def submit(profile, request_type, request_text, recipient_name="",
-           request_date="", exclude_precedent_ids=()):
+           request_date="", exclude_precedent_ids=(), instructions=""):
     """Create a queued task and start its execution in the background.
 
     The pool is lazily created; tests replace it with a no-op to keep
@@ -52,6 +52,7 @@ def submit(profile, request_type, request_text, recipient_name="",
         request_text=request_text,
         recipient_name=recipient_name,
         request_date=request_date,
+        instructions=instructions,
         exclude_precedent_ids=[str(i) for i in exclude_precedent_ids],
         status="queued",
     )
@@ -86,6 +87,7 @@ def _run(task_id):
             request_date=task.request_date,
             exclude_precedent_ids=task.exclude_precedent_ids,
             progress=lambda label: _update(task, progress=label),
+            instructions=task.instructions,
         )
         _update(
             task,

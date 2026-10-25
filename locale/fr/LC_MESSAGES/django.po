@@ -460,3 +460,12 @@ msgstr "En cours"
 
 msgid "Generated text"
 msgstr "Texte généré"
+
+msgid "Instructions for this reply (optional)"
+msgstr "Instructions pour cette réponse (optionnel)"
+
+msgid "e.g. mention the annual general meeting, stay brief…"
+msgstr "p. ex. mentionner l'assemblée générale, rester bref…"
+
+msgid "Instructions"
+msgstr "Instructions"

@@ -65,6 +65,7 @@ def generate_draft(
     request_date="",
     exclude_precedent_ids=(),
     progress=None,
+    instructions="",
 ):
     """Generate one reply draft; returns (draft_text, [precedent dicts]).
 
@@ -110,6 +111,7 @@ def generate_draft(
         recipient_name=recipient_name,
         request_date=request_date,
         context_items=context_items,
+        instructions=instructions,
     )
     draft_text = llm.complete(prompt, temperature=profile.temperature)
     return draft_text, [

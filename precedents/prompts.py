@@ -194,6 +194,7 @@ def generation_prompt(
     recipient_name="",
     request_date="",
     context_items=None,
+    instructions="",
 ):
     """Step 3 — assemble the full generation prompt."""
     blocks = [role_prompt.strip() + "\n\n"]
@@ -205,6 +206,14 @@ def generation_prompt(
         else:
             head = "Organization rules:\n"
         blocks.append(head + organization_rules.strip() + "\n\n")
+    if instructions and instructions.strip():
+        if profile_language == "de":
+            head = "Zusätzliche Anweisungen für diese Antwort:\n"
+        elif profile_language == "fr":
+            head = "Instructions supplémentaires pour cette réponse :\n"
+        else:
+            head = "Additional instructions for this reply:\n"
+        blocks.append(head + instructions.strip() + "\n\n")
     blocks.append(_context_block(profile_language, context_items or []))
     blocks.append(
         _request_block(profile_language, request_text, recipient_name, request_date)

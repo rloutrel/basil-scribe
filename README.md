@@ -68,12 +68,13 @@ is ever sent to an external service.
    request type** are selected by cosine similarity (numpy over stored
    vectors — no external vector database at this scale), and the
    generation prompt is assembled in the profile language in this
-   order: role prompt, business rules, reserved context block (empty in
-   v1), current request, the 3 precedents as few-shot examples
-   ("Ähnlicher Fall"), form constraints (greeting, signature,
-   ready-to-send answer, invent nothing). The precedents used are shown
-   collapsed for transparency; "Next version" regenerates while
-   excluding a precedent.
+   order: role prompt, business rules, free-form instructions for this
+   reply (optional field on the form: tone, points to mention…),
+   reserved context block (empty in v1), current request, the 3
+   precedents as few-shot examples ("Ähnlicher Fall"), form constraints
+   (greeting, signature, ready-to-send answer, invent nothing). The
+   precedents used are shown collapsed for transparency; "Next version"
+   regenerates while excluding a precedent.
 4. **Review and log** — the draft stays editable; there is no SMTP in
    v1 and there will never be automatic sending (Basil rule: any reply
    to a third party requires human validation). "Take over" saves the
