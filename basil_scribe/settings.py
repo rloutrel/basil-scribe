@@ -147,7 +147,7 @@ PROFILES_DIR = os.environ.get("PROFILES_DIR", BASE_DIR / "profiles")
 MAIL_EXPORT_ROOT = os.environ.get("MAIL_EXPORT_ROOT", "/data/mail-exports")
 
 OLLAMA_BASE_URL = os.environ.get("OLLAMA_BASE_URL", "http://ollama:11434/v1")
-LLM_MODEL = os.environ.get("LLM_MODEL", "llama3.1:8b")
+LLM_MODEL = os.environ.get("LLM_MODEL", "")
 
 EMBED_DEVICE = os.environ.get("EMBED_DEVICE", "cpu")
 EMBED_MODEL = os.environ.get("EMBED_MODEL", "BAAI/bge-m3")

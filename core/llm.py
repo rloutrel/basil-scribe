@@ -27,6 +27,11 @@ def complete(prompt, temperature=0.7):
         from openai import OpenAI
     except ImportError:
         raise LLMError("openai is not installed")
+    if not settings.LLM_MODEL:
+        raise LLMError(
+            "LLM_MODEL is not configured. Set it in .env to a model your "
+            "Ollama serves (as shown by `ollama list`, tag included)."
+        )
     try:
         client = OpenAI(base_url=settings.OLLAMA_BASE_URL, api_key="ollama")
         response = client.chat.completions.create(
@@ -36,8 +41,15 @@ def complete(prompt, temperature=0.7):
         )
         return response.choices[0].message.content
     except Exception as exc:
+        message = str(exc)
+        if "not found" in message and settings.LLM_MODEL in message:
+            raise LLMError(
+                f"Model '{settings.LLM_MODEL}' is not served by your "
+                "Ollama. Check `ollama list` and set LLM_MODEL in .env "
+                "to the exact name, tag included (e.g. llama3.1:latest)."
+            ) from exc
         logger.exception("LLM call failed")
-        raise LLMError(str(exc)) from exc
+        raise LLMError(message) from exc
 
 
 JSON_BLOCK = re.compile(r"```(?:json)?\s*(.*?)\s*```", re.DOTALL)
