@@ -36,6 +36,12 @@
   </form>
 </section>
 
+{% if task %}
+<section class="card" id="task-card">
+  {% include "drafts/partials/task_status.html" %}
+</section>
+{% endif %}
+
 {% if draft %}
 <section class="card">
   <h2>{% trans "Draft" %}</h2>

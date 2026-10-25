@@ -3,11 +3,10 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.utils.translation import gettext as _
 from django.views.decorators.http import require_POST
 
-from core.llm import LLMError
 from precedents.build import add_precedent_from_draft, recent_extraction_summary
 
-from .generation import generate_draft
-from .models import Draft
+from .models import Draft, GenerationTask
+from .tasks import submit
 
 
 def home(request):
@@ -15,6 +14,15 @@ def home(request):
     profile = request.active_profile
     if profile is None:
         return render(request, "drafts/no_profile.html")
+    task = None
+    task_id = request.session.get("active_task_id")
+    if task_id:
+        task = GenerationTask.objects.filter(
+            pk=task_id, profile=profile
+        ).first()
+        if task is not None and task.status == "done":
+            # The draft section below shows the result; hide the panel.
+            task = None
     context = {
         "profile": profile,
         "request_types": [
@@ -22,20 +30,18 @@ def home(request):
             for rt in profile.request_types
         ],
         "extraction_summary": recent_extraction_summary(profile),
-        "draft": None,
-        "precedents_used": [],
+        "task": task,
         "drafts": [],
         "selected_type": request.GET.get("type", ""),
     }
     if "draft_payload" in request.session:
-        payload = request.session.pop("draft_payload")
-        context["draft"] = payload
+        context["draft"] = request.session.pop("draft_payload")
     return render(request, "drafts/home.html", context)
 
 
 @require_POST
 def generate(request):
-    """Generate a draft for the profile's selected request type."""
+    """Queue an asynchronous generation; the UI polls the task."""
     profile = request.active_profile
     if profile is None:
         return redirect("drafts:home")
@@ -50,70 +56,75 @@ def generate(request):
         messages.error(request, _("Please choose a request type."))
         return redirect("drafts:home")
 
-    try:
-        draft_text, precedents_used = generate_draft(
-            profile,
-            request_type,
-            request_text,
-            recipient_name=recipient_name,
-            request_date=request_date,
-        )
-    except LLMError as exc:
-        messages.error(
-            request,
-            _("Draft generation failed: %(error)s") % {"error": exc},
-        )
-        return redirect("drafts:home")
-
-    payload = {
-        "generated_text": draft_text,
-        "request_text": request_text,
-        "request_type": request_type,
-        "recipient_name": recipient_name,
-        "request_date": request_date,
-        "precedents_used": precedents_used,
-    }
-    request.session["draft_payload"] = payload
+    task = submit(
+        profile,
+        request_type,
+        request_text,
+        recipient_name=recipient_name,
+        request_date=request_date,
+    )
+    request.session["active_task_id"] = task.pk
     return redirect("drafts:home")
 
 
 @require_POST
 def regenerate(request):
-    """Version suivante: regenerate, excluding the selected precedent."""
+    """Next version: re-queue a generation, excluding selected precedents."""
     profile = request.active_profile
     if profile is None:
         return redirect("drafts:home")
-    payload = request.session.get("draft_payload")
+    payload = request.session.get("draft_payload") or {}
     if not payload:
-        return redirect("drafts:home")
-    exclude = request.POST.getlist("exclude")
-    exclude_ids = [str(e) for e in exclude]
-
+        task_id = request.session.get("active_task_id")
+        task = (
+            GenerationTask.objects.filter(pk=task_id, profile=profile).first()
+            if task_id
+            else None
+        )
+        if task is None:
+            return redirect("drafts:home")
+        payload = {
+            "request_type": task.request_type,
+            "request_text": task.request_text,
+            "recipient_name": task.recipient_name,
+            "request_date": task.request_date,
+            "precedents_used": task.precedents_used,
+        }
+    exclude = [str(e) for e in request.POST.getlist("exclude")]
     precedents = payload.get("precedents_used") or []
-    if precedents and not exclude_ids:
-        exclude_ids = [str(precedents[0].get("id"))]
-    try:
-        draft_text, precedents_used = generate_draft(
-            profile,
-            payload["request_type"],
-            payload["request_text"],
-            recipient_name=payload.get("recipient_name", ""),
-            request_date=payload.get("request_date", ""),
-            exclude_precedent_ids=exclude_ids,
-        )
-    except LLMError as exc:
-        messages.error(
-            request,
-            _("Draft generation failed: %(error)s") % {"error": exc},
-        )
-        return redirect("drafts:home")
-    payload["generated_text"] = draft_text
-    payload["precedents_used"] = precedents_used
-    payload["excluded"] = sorted(
-        set(payload.get("excluded", []) + [str(e) for e in exclude_ids])
+    if precedents and not exclude:
+        exclude = [str(precedents[0].get("id"))]
+
+    task = submit(
+        profile,
+        payload["request_type"],
+        payload["request_text"],
+        recipient_name=payload.get("recipient_name", ""),
+        request_date=payload.get("request_date", ""),
+        exclude_precedent_ids=exclude,
     )
-    request.session["draft_payload"] = payload
+    request.session["active_task_id"] = task.pk
     return redirect("drafts:home")
+
+
+def task_status(request, pk):
+    """HTMX poll target: the generation status panel."""
+    profile = request.active_profile
+    task = get_object_or_404(GenerationTask, pk=pk, profile=profile)
+    if task.status == "done":
+        request.session["draft_payload"] = {
+            "generated_text": task.generated_text,
+            "request_text": task.request_text,
+            "request_type": task.request_type,
+            "recipient_name": task.recipient_name,
+            "request_date": task.request_date,
+            "precedents_used": task.precedents_used,
+        }
+    return render(
+        request,
+        "drafts/partials/task_status.html",
+        {"task": task, "profile": profile},
+    )
 
 
 def draft_list(request):
@@ -146,7 +157,7 @@ def draft_list(request):
 
 @require_POST
 def accept_draft(request, pk):
-    """Übernehmen: persist the final, human-reviewed version."""
+    """Take over: persist the final, human-reviewed version."""
     draft = get_object_or_404(Draft, pk=pk, profile=request.active_profile)
     final_text = (request.POST.get("final_text") or "").strip()
     if not final_text:
@@ -161,7 +172,7 @@ def accept_draft(request, pk):
 
 @require_POST
 def add_precedent(request, pk):
-    """Als Präzedenzfall hinzufügen: feed the accepted pair back."""
+    """Add as precedent: feed the accepted pair back."""
     draft = get_object_or_404(
         Draft, pk=pk, profile=request.active_profile, status="accepted"
     )

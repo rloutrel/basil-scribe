@@ -1,0 +1,26 @@
+{% load i18n %}
+<div id="task-panel">
+  {% if task.status == "queued" or task.status == "running" %}
+  <div class="task-running" hx-get="{% url 'drafts:task_status' task.pk %}" hx-trigger="every 2s" hx-target="#task-panel" hx-swap="outerHTML">
+    <span class="spinner" aria-hidden="true"></span>
+    <div>
+      <p><strong>{% if task.status == "queued" %}{% trans "Queued…" %}{% else %}{% trans "Generating your draft…" %}{% endif %}</strong></p>
+      {% if task.progress %}<p class="muted">{{ task.progress }}</p>{% endif %}
+      <p class="muted">{% trans "This can take a few minutes on first use; the page updates automatically." %}</p>
+    </div>
+  </div>
+  {% elif task.status == "failed" %}
+  <div class="task-failed">
+    <p><strong>{% trans "Draft generation failed." %}</strong></p>
+    <p class="muted">{{ task.error }}</p>
+    <form method="post" action="{% url 'drafts:regenerate' %}">
+      {% csrf_token %}
+      <button type="submit">{% trans "Try again" %}</button>
+    </form>
+  </div>
+  {% endif %}
+</div>
+{% if task.status == "done" %}
+{# The draft is ready: swap the whole page so the draft section appears. #}
+<div hx-get="{% url 'drafts:home' %}" hx-trigger="load" hx-target="body" hx-swap="outerHTML"></div>
+{% endif %}

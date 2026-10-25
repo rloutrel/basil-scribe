@@ -7,6 +7,8 @@ The draft always stays editable; nothing is ever sent automatically
 
 import logging
 
+from django.utils.translation import gettext as _
+
 from core import embeddings, kontext, llm
 from precedents.index import cosine_top_k
 from precedents.models import Precedent
@@ -62,18 +64,30 @@ def generate_draft(
     recipient_name="",
     request_date="",
     exclude_precedent_ids=(),
+    progress=None,
 ):
     """Generate one reply draft; returns (draft_text, [precedent dicts]).
 
-    Never blocks on context: the context seam returns an empty list in
-    v1 and failures are swallowed.
+    `progress`, when given, is called with short human-readable labels
+    at each step so the UI can show what is happening. Never blocks on
+    context: the context seam returns an empty list in v1 and failures
+    are swallowed.
     """
+    def report(label):
+        if progress is not None:
+            progress(label)
+
     rt = profile.request_type(request_type)
     if rt is None:
         raise ValueError("Unknown request type: %s" % request_type)
 
+    report(_("Finding similar precedents…"))
     precedents = similar_precedents(
         profile, request_type, request_text, exclude_ids=exclude_precedent_ids
+    )
+    report(
+        _("%(count)d precedent(s) found — asking the model…")
+        % {"count": len(precedents)}
     )
     blocks = precedent_blocks(precedents, rt["name"])
     try:

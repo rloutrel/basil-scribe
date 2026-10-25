@@ -409,3 +409,54 @@ msgstr "La clé « context » doit être un mapping."
 
 msgid "The profile is invalid: %(count)d error(s)."
 msgstr "Le profil est invalide : %(count)d erreur(s)."
+
+msgid "Queued…"
+msgstr "En file d'attente…"
+
+msgid "Generating your draft…"
+msgstr "Génération de votre brouillon…"
+
+msgid ""
+"This can take a few minutes on first use; the page updates automatically."
+msgstr ""
+"Cela peut prendre quelques minutes à la première utilisation ; la page se "
+"met à jour automatiquement."
+
+msgid "Draft generation failed."
+msgstr "Échec de la génération du brouillon."
+
+msgid "Try again"
+msgstr "Réessayer"
+
+msgid "Loading the embedding model…"
+msgstr "Chargement du modèle d'embeddings…"
+
+msgid "Finding similar precedents…"
+msgstr "Recherche de précédents similaires…"
+
+msgid "%(count)d precedent(s) found — asking the model…"
+msgstr "%(count)d précédent(s) trouvé(s) — interrogation du modèle…"
+
+msgid "Generation task"
+msgstr "Tâche de génération"
+
+msgid "Generation tasks"
+msgstr "Tâches de génération"
+
+msgid "Excluded precedents"
+msgstr "Précédents exclus"
+
+msgid "Progress"
+msgstr "Progression"
+
+msgid "Done"
+msgstr "Terminé"
+
+msgid "Failed"
+msgstr "Échec"
+
+msgid "Running"
+msgstr "En cours"
+
+msgid "Generated text"
+msgstr "Texte généré"

@@ -414,3 +414,54 @@ msgstr "Der Schlüssel 'context' muss ein Mapping sein."
 
 msgid "The profile is invalid: %(count)d error(s)."
 msgstr "Das Profil ist ungültig: %(count)d Fehler."
+
+msgid "Queued…"
+msgstr "In der Warteschlange…"
+
+msgid "Generating your draft…"
+msgstr "Entwurf wird erzeugt…"
+
+msgid ""
+"This can take a few minutes on first use; the page updates automatically."
+msgstr ""
+"Bei der ersten Nutzung kann das einige Minuten dauern; die Seite "
+"aktualisiert sich automatisch."
+
+msgid "Draft generation failed."
+msgstr "Entwurfserzeugung fehlgeschlagen."
+
+msgid "Try again"
+msgstr "Erneut versuchen"
+
+msgid "Loading the embedding model…"
+msgstr "Embedding-Modell wird geladen…"
+
+msgid "Finding similar precedents…"
+msgstr "Suche nach ähnlichen Präzedenzfällen…"
+
+msgid "%(count)d precedent(s) found — asking the model…"
+msgstr "%(count)d Präzedenzfall/fälle gefunden — das Modell wird befragt…"
+
+msgid "Generation task"
+msgstr "Generierungsaufgabe"
+
+msgid "Generation tasks"
+msgstr "Generierungsaufgaben"
+
+msgid "Excluded precedents"
+msgstr "Ausgeschlossene Präzedenzfälle"
+
+msgid "Progress"
+msgstr "Fortschritt"
+
+msgid "Done"
+msgstr "Fertig"
+
+msgid "Failed"
+msgstr "Fehlgeschlagen"
+
+msgid "Running"
+msgstr "Läuft"
+
+msgid "Generated text"
+msgstr "Erzeugter Text"

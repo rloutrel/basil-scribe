@@ -5,7 +5,7 @@ from unittest import mock
 import pytest
 from django.urls import reverse
 
-from drafts.models import Draft
+from drafts.models import Draft, GenerationTask
 from precedents.models import Precedent
 
 from .factories import make_profile
@@ -36,7 +36,8 @@ def test_home_with_profile(client_with_profile, profile):
     assert profile.display_name.encode() in response.content
 
 
-def test_generate_stores_payload_in_session(client_with_profile, profile):
+def test_generate_queues_task_and_status_polls(client_with_profile, profile):
+    """POST queues a task; the worker fills it; polling serves it."""
     with mock.patch(
         "drafts.generation.llm.complete", return_value="Sehr geehrter Herr X, …"
     ) as complete, mock.patch(
@@ -51,14 +52,31 @@ def test_generate_stores_payload_in_session(client_with_profile, profile):
                 "request_date": "2026-02-01",
             },
         )
-    assert response.status_code == 302
-    payload = client_with_profile.session["draft_payload"]
-    assert payload["generated_text"].startswith("Sehr geehrter")
-    assert payload["request_type"] == "resignation"
+        assert response.status_code == 302
+        assert GenerationTask.objects.filter(profile=profile).count() == 1
+        task = GenerationTask.objects.get(profile=profile)
+        assert client_with_profile.session["active_task_id"] == task.pk
+
+        from drafts.tasks import _run
+
+        _run(task.pk)
+    task.refresh_from_db()
+    assert task.status == "done"
+    assert task.generated_text.startswith("Sehr geehrter")
     prompt = complete.call_args[0][0]
     assert "Du bist ein Vorstandsmitglied." in prompt
     assert "Die Mitgliedschaft endet zum Ende des Kalenderjahres." in prompt
     assert "Mit freundlichen Grüßen" in prompt
+
+    client_with_profile.session["active_task_id"] = task.pk
+    client_with_profile.session.save()
+    response = client_with_profile.get(
+        reverse("drafts:task_status", args=[task.pk])
+    )
+    assert response.status_code == 200
+    payload = client_with_profile.session["draft_payload"]
+    assert payload["generated_text"].startswith("Sehr geehrter")
+    assert payload["request_type"] == "resignation"
 
 
 def test_generate_requires_text(client_with_profile, profile):
@@ -92,7 +110,22 @@ def test_generate_llm_failure_is_non_fatal(client_with_profile, profile):
             reverse("drafts:generate"),
             {"request_type": "resignation", "request_text": "Ich kündige."},
         )
-    assert response.status_code == 302
+        assert response.status_code == 302
+        task = GenerationTask.objects.get(profile=profile)
+        from drafts.tasks import _run
+
+        _run(task.pk)
+    task.refresh_from_db()
+    assert task.status == "failed"
+    assert "connection refused" in task.error
+
+    client_with_profile.session["active_task_id"] = task.pk
+    client_with_profile.session.save()
+    response = client_with_profile.get(
+        reverse("drafts:task_status", args=[task.pk])
+    )
+    assert response.status_code == 200
+    assert b"connection refused" in response.content
 
 
 def test_regenerate_excludes_precedent(client_with_profile, profile, db):
@@ -113,7 +146,13 @@ def test_regenerate_excludes_precedent(client_with_profile, profile, db):
         "drafts.generation.similar_precedents", return_value=[]
     ) as similar:
         client_with_profile.post(reverse("drafts:regenerate"))
-    assert client_with_profile.session["draft_payload"]["generated_text"] == "Version 2"
+        task = GenerationTask.objects.get(profile=profile)
+        from drafts.tasks import _run
+
+        _run(task.pk)
+    task.refresh_from_db()
+    assert task.generated_text == "Version 2"
+    assert task.exclude_precedent_ids == ["42"]
     kwargs = similar.call_args.kwargs
     assert kwargs["exclude_ids"] == ["42"]
 

@@ -57,7 +57,13 @@ is ever sent to an external service.
    `answer_categories`. Failures are non-fatal and simply stay
    unclassified for a later re-run.
 3. **Draft** — on the home page, choose a request type, paste the
-   request text (date and recipient name optional). The request is
+   request text (date and recipient name optional). Generation runs
+   **asynchronously**: the POST queues a task and returns immediately,
+   and the page polls the status every 2 seconds (spinner + progress
+   label: embedding model load, similar-precedent search, LLM call) so
+   a first run that downloads and loads bge-m3 never blocks or times
+   out. When done, the draft appears in an editable textarea; on
+   failure the error is shown with a retry button. The request is
    embedded, the top-3 precedents **of the same profile and the same
    request type** are selected by cosine similarity (numpy over stored
    vectors — no external vector database at this scale), and the
@@ -65,9 +71,9 @@ is ever sent to an external service.
    order: role prompt, business rules, reserved context block (empty in
    v1), current request, the 3 precedents as few-shot examples
    ("Ähnlicher Fall"), form constraints (greeting, signature,
-   ready-to-send answer, invent nothing). The draft appears in an
-   editable textarea; the precedents used are shown collapsed for
-   transparency; "Next version" regenerates while excluding a precedent.
+   ready-to-send answer, invent nothing). The precedents used are shown
+   collapsed for transparency; "Next version" regenerates while
+   excluding a precedent.
 4. **Review and log** — the draft stays editable; there is no SMTP in
    v1 and there will never be automatic sending (Basil rule: any reply
    to a third party requires human validation). "Take over" saves the
