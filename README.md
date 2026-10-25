@@ -89,7 +89,8 @@ mkdir -p mail-exports profiles
 docker compose up --build -d
 ```
 
-Services: `web` (Django + gunicorn), `ollama` (model volume, model
+Services: `web` (Django + gunicorn, static files served by
+WhiteNoise), `ollama` (model volume, model
 pulled at first start by the entrypoint), `db` (PostgreSQL, named
 volume). The mail archive is mounted read-only
 (`./mail-exports:/data/mail-exports:ro`) — the tool can never modify or

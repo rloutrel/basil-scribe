@@ -14,6 +14,7 @@ depends on the following permissively licensed third-party packages:
 | openai (SDK) | Apache-2.0 | Client SDK pointed at the local Ollama server |
 | FlagEmbedding | MIT | BGEM3FlagModel embeddings (bge-m3), local |
 | gunicorn | MIT | WSGI HTTP server |
+| whitenoise | MIT | Serves collected static files from gunicorn |
 | pytest | MIT | Test runner (development only) |
 | pytest-django | BSD-3-Clause | Django integration for pytest (development only) |
 
