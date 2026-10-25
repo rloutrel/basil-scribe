@@ -1,0 +1,49 @@
+# Example basil-scribe profile.
+#
+# Copy this file to profiles/<name>.yaml (or keep it and adapt it), then
+# run:  python manage.py check_config --profile <name> --sync
+#
+# Every key of the file is documented here. All keys are in English; the
+# *values* stay in the working language of the profile.
+
+profile:
+  name: "Förderkreis Romain-Rolland — Mitgliedschaft"  # shown in the UI
+  language: "de"     # working language: drives UI texts, prompts, labels (en, fr, de)
+  mail_source: "fk-roro"  # subfolder of MAIL_EXPORT_ROOT scanned by build_precedents
+
+organization:
+  name: "Förderkreis Romain-Roll e.V."
+  greeting: "Sie"    # required politeness form (Du/Sie, tu/vous, ...)
+  signature: |       # appended to every generated reply
+    Mit freundlichen Grüßen
+    Der Vorstand
+  rules: |           # business rules, free text injected into the prompt
+    Die Mitgliedschaft endet zum Ende des laufenden Kalenderjahres.
+    Beiträge werden nicht anteilig erstattet.
+
+# Writer's role, injected as-is at the top of the generation prompt.
+role_prompt: |
+  Du bist ein ehrenamtliches Vorstandsmitglied und antwortest auf
+  Mitgliedschafts-Anliegen höflich, persönlich und klar.
+
+# Optional generation temperature (default: 0.7).
+# temperature: 0.5
+
+request_types:                    # 1..n request types of the profile
+  resignation:
+    name: "Kündigung der Mitgliedschaft"
+    subject_keywords: ["kündigung"]   # subject contains one of these…
+    sender_domains: ["fk-roro.de"]    # …or sender in these domains + type mentioned
+    folders: ["Kündigung_*"]          # indicative folder signal, never exclusive
+    answer_categories: ["acknowledge_receipt", "confirm_end", "followup_question", "other"]
+
+  application:
+    name: "Aufnahmeantrag"
+    subject_keywords: ["aufnahme", "beitritt"]
+    sender_domains: []
+    folders: []
+    answer_categories: ["acknowledge_receipt", "confirm_welcome", "other"]
+
+# Anticipated context extension — disabled in v1, do not enable.
+context:
+  enabled: false

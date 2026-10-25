@@ -1,0 +1,47 @@
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-basil_scribe}
+      POSTGRES_USER: ${POSTGRES_USER:-basil}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-basil}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-basil}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+  ollama:
+    image: ollama/ollama
+    volumes:
+      - ollama_models:/root/.ollama
+
+  web:
+    build: .
+    ports:
+      - "${WEB_PORT:-8000}:8000"
+    # Optional: copy .env.example to .env to override secrets and
+    # settings. The stack also starts with the defaults below.
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      DJANGO_ALLOWED_HOSTS: ${DJANGO_ALLOWED_HOSTS:-localhost,127.0.0.1}
+      POSTGRES_HOST: db
+      PROFILES_DIR: /app/profiles
+      MAIL_EXPORT_ROOT: /data/mail-exports
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://ollama:11434/v1}
+    volumes:
+      - ./profiles:/app/profiles
+      - ./mail-exports:/data/mail-exports:ro
+    depends_on:
+      db:
+        condition: service_healthy
+      ollama:
+        condition: service_started
+
+volumes:
+  postgres_data:
+  ollama_models:

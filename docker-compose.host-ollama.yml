@@ -1,0 +1,33 @@
+# Override to reuse an Ollama server already running on the Docker host
+# (or any reachable host) instead of the bundled `ollama` service.
+#
+# Usage (Docker Compose v2.24+):
+#   docker compose -f docker-compose.yml -f docker-compose.host-ollama.yml up -d
+# or persistently:
+#   COMPOSE_FILE=docker-compose.yml:docker-compose.host-ollama.yml docker compose up -d
+#
+# The bundled Ollama image and its model volume are not pulled or started.
+# Point OLLAMA_HOST_URL at your server, e.g.:
+#   OLLAMA_HOST_URL=http://host.docker.internal:11434/v1 docker compose ... up -d
+
+services:
+  web:
+    environment:
+      OLLAMA_BASE_URL: ${OLLAMA_HOST_URL:-http://host.docker.internal:11434/v1}
+      # No model pull needed: your Ollama already serves the model.
+      OLLAMA_PULL_MODEL: ""
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    depends_on:
+      db:
+        condition: service_healthy
+      ollama:
+        condition: service_completed_successfully
+
+  ollama:
+    # Stub the bundled service out: compose requires the dependency to
+    # exist, so replace it with a no-op that exits immediately.
+    image: bash
+    entrypoint: ["true"]
+    deploy:
+      replicas: 0
