@@ -22,8 +22,9 @@ COPY . .
 
 RUN python manage.py collectstatic --noinput \
     && adduser --disabled-password --no-create-home basil \
-    && mkdir -p /app/profiles /data/mail-exports \
-    && chown -R basil:basil /app
+    && mkdir -p /app/profiles /data/mail-exports /cache/huggingface \
+    && chown -R basil:basil /app \
+    && chown -R basil:basil /cache
 
 USER basil
 
