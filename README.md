@@ -101,6 +101,35 @@ validation/sync and the Ollama model pull, then starts gunicorn. The
 application is available at [http://localhost:8000](http://localhost:8000)
 (configurable with `WEB_PORT`).
 
+#### Updating without re-downloading everything
+
+The heavy dependencies (torch, FlagEmbedding, ~2 GB) and the embedding
+model are each downloaded **once** and then cached:
+
+- the Dockerfile installs requirements in a dedicated layer with a
+  BuildKit pip cache mount — adding a small dependency later downloads
+  only that package, and a code-only change does not even touch the
+  dependency layer (requires BuildKit, default since Docker 23);
+- the bge-m3 embedding model lives in the `hf_cache` named volume —
+  it survives rebuilds and restarts.
+
+So the gentle update flow is:
+
+```bash
+git pull
+COMPOSE_FILE=docker-compose.yml:docker-compose.host-ollama.yml \
+  docker compose up -d --build
+```
+
+The first `--build` after adding a dependency still re-runs `pip
+install`, but from the warm wheel cache — seconds, not a full
+re-download. If only Python/HTML/CSS code changed, you can even skip
+the rebuild and restart with the new code mounted — not applicable here
+since code is baked into the image, so keep `--build`; it is cheap
+after the first time. If a build ever goes wrong and you want a truly
+clean slate, `docker builder prune` clears the BuildKit cache (next
+build downloads everything again).
+
 #### Reusing an Ollama server you already have
 
 If you already run Ollama on the Docker host (or any reachable

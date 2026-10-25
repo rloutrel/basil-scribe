@@ -33,9 +33,13 @@ services:
       PROFILES_DIR: /app/profiles
       MAIL_EXPORT_ROOT: /data/mail-exports
       OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://ollama:11434/v1}
+      # Persist the downloaded embedding model (bge-m3) and its caches
+      # across rebuilds and restarts — downloaded once, never again.
+      HF_HOME: /cache/huggingface
     volumes:
       - ./profiles:/app/profiles
       - ./mail-exports:/data/mail-exports:ro
+      - hf_cache:/cache/huggingface
     depends_on:
       db:
         condition: service_healthy
@@ -45,3 +49,4 @@ services:
 volumes:
   postgres_data:
   ollama_models:
+  hf_cache:
