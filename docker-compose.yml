@@ -32,7 +32,7 @@ services:
       POSTGRES_HOST: db
       PROFILES_DIR: /app/profiles
       MAIL_EXPORT_ROOT: /data/mail-exports
-      OLLAMA_BASE_URL: http://ollama:11434/v1
+      OLLAMA_BASE_URL: ${OLLAMA_BASE_URL:-http://ollama:11434/v1}
     volumes:
       - ./profiles:/app/profiles
       - ./mail-exports:/data/mail-exports:ro

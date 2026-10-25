@@ -100,6 +100,24 @@ validation/sync and the Ollama model pull, then starts gunicorn. The
 application is available at [http://localhost:8000](http://localhost:8000)
 (configurable with `WEB_PORT`).
 
+#### Reusing an Ollama server you already have
+
+If you already run Ollama on the Docker host (or any reachable
+machine), skip the bundled `ollama` service entirely with the override
+file (Docker Compose v2.24+) — no second image download, no duplicate
+model volume:
+
+```bash
+docker compose -f docker-compose.yml -f docker-compose.host-ollama.yml up -d
+# or persistently:
+COMPOSE_FILE=docker-compose.yml:docker-compose.host-ollama.yml docker compose up -d
+```
+
+The web service then reaches your server through
+`http://host.docker.internal:11434/v1` by default; override with
+`OLLAMA_HOST_URL` (keep the `/v1` suffix, the OpenAI SDK expects it).
+`LLM_MODEL` must name a model your Ollama already serves.
+
 ### Without Docker
 
 Requirements: Python 3.12+, a PostgreSQL server, a local Ollama (or an
