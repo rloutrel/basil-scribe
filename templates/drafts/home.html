@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Draft a reply" %} — Basil {% endblock %}
+{% block content %}
+{% if profile %}
+<section class="card">
+  <h1>{% trans "Draft a reply from precedents" %}</h1>
+  {% if extraction_summary %}
+  <p class="muted">
+    {% blocktrans with count=extraction_summary.pairs_matched %}{{ count }} precedent pairs available.{% endblocktrans %}
+  </p>
+  {% else %}
+  <p class="muted">{% trans "No precedents extracted yet. Run build_precedents for this profile." %}</p>
+  {% endif %}
+  <form method="post" action="{% url 'drafts:generate' %}">
+    {% csrf_token %}
+    <label for="id_request_type">{% trans "Request type" %}</label>
+    <select name="request_type" id="id_request_type" required>
+      {% for rt in request_types %}
+      <option value="{{ rt.key }}" {% if rt.key == selected_type %}selected{% endif %}>{{ rt.name }}</option>
+      {% endfor %}
+    </select>
+    <label for="id_request_text">{% trans "Request received" %}</label>
+    <textarea name="request_text" id="id_request_text" rows="8" required></textarea>
+    <div class="two-cols">
+      <div>
+        <label for="id_recipient_name">{% trans "Recipient name (optional)" %}</label>
+        <input type="text" name="recipient_name" id="id_recipient_name">
+      </div>
+      <div>
+        <label for="id_request_date">{% trans "Request date (optional)" %}</label>
+        <input type="text" name="request_date" id="id_request_date" placeholder="2026-01-15">
+      </div>
+    </div>
+    <button type="submit" class="primary">{% trans "Generate draft" %}</button>
+  </form>
+</section>
+
+{% if draft %}
+<section class="card">
+  <h2>{% trans "Draft" %}</h2>
+  <p class="muted">{% trans "The draft is editable. It is never sent automatically: review it before use." %}</p>
+  <textarea id="draft-text" rows="16">{{ draft.generated_text }}</textarea>
+  <form method="post" action="{% url 'drafts:regenerate' %}">
+    {% csrf_token %}
+    <input type="hidden" name="exclude" value="">
+    <button type="submit">{% trans "Next version" %}</button>
+  </form>
+  <details>
+    <summary>{% trans "Precedents used" %} ({{ draft.precedents_used|length }})</summary>
+    {% for p in draft.precedents_used %}
+    <div class="precedent">
+      <h3>#{{ p.id }} — {{ p.request_subject }}</h3>
+      {% if p.answer_category %}<p class="badge">{{ p.answer_category }}</p>{% endif %}
+      <pre>{{ p.reply_body }}</pre>
+    </div>
+    {% endfor %}
+  </details>
+</section>
+{% endif %}
+{% endif %}
+{% endblock %}

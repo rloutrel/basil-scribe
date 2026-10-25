@@ -1,0 +1,150 @@
+:root {
+  --bg: #ffffff;
+  --bg-accent: #f4f6f8;
+  --text: #1a1a1a;
+  --text-muted: #5a6470;
+  --border: #d8dde3;
+  --primary: #2f6f4f;
+  --primary-contrast: #ffffff;
+  --accent: #e6f2ec;
+  --neutral: #f0f1f3;
+  --error: #b3261e;
+  --ok: #1e6b3a;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.08);
+}
+
+html[data-theme="dark"] {
+  --bg: #15181c;
+  --bg-accent: #1d2127;
+  --text: #e8eaed;
+  --text-muted: #9aa3ad;
+  --border: #333941;
+  --primary: #6fbf8f;
+  --primary-contrast: #10241a;
+  --accent: #213529;
+  --neutral: #22262c;
+  --error: #f28b82;
+  --ok: #81c995;
+  --shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+}
+
+.navbar {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  padding: 0.6rem 1.2rem;
+  background: var(--bg-accent);
+  border-bottom: 1px solid var(--border);
+}
+
+.brand { font-weight: 700; font-size: 1.1rem; color: var(--text); text-decoration: none; }
+.brand-scribe { color: var(--primary); }
+.nav-links { display: flex; gap: 1rem; flex: 1; }
+.nav-links a { color: var(--text-muted); text-decoration: none; padding: 0.25rem 0.5rem; }
+.nav-links a.active, .nav-links a:hover { color: var(--text); border-bottom: 2px solid var(--primary); }
+
+.profile-form select, .filters select {
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.3rem 0.5rem;
+}
+
+.theme-toggle {
+  background: none;
+  border: 1px solid var(--border);
+  border-radius: 999px;
+  cursor: pointer;
+  font-size: 1rem;
+  padding: 0.25rem 0.6rem;
+}
+
+.container { max-width: 60rem; margin: 0 auto; padding: 1.5rem 1.2rem; }
+
+.card {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+}
+
+h1 { font-size: 1.4rem; margin: 0 0 1rem; }
+h2 { font-size: 1.15rem; }
+.muted { color: var(--text-muted); }
+
+label { display: block; margin: 0.8rem 0 0.25rem; font-weight: 600; }
+
+input[type="text"], textarea, select {
+  width: 100%;
+  background: var(--bg);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem;
+  font: inherit;
+}
+
+textarea { resize: vertical; }
+
+.two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+@media (max-width: 40rem) { .two-cols { grid-template-columns: 1fr; } }
+
+button {
+  background: var(--neutral);
+  color: var(--text);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.5rem 1rem;
+  font: inherit;
+  cursor: pointer;
+  margin-top: 0.8rem;
+}
+button:hover { border-color: var(--primary); }
+button.primary { background: var(--primary); color: var(--primary-contrast); border-color: var(--primary); }
+
+.messages { margin-bottom: 1rem; }
+.message { padding: 0.6rem 1rem; border-radius: 6px; margin-bottom: 0.4rem; border: 1px solid var(--border); background: var(--bg-accent); }
+.message-error { border-color: var(--error); color: var(--error); }
+.message-success { border-color: var(--ok); color: var(--ok); }
+
+.badge {
+  display: inline-block;
+  background: var(--accent);
+  color: var(--primary);
+  border-radius: 999px;
+  padding: 0.1rem 0.6rem;
+  font-size: 0.8rem;
+}
+.badge.ok { background: var(--accent); }
+
+pre {
+  background: var(--bg-accent);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 0.75rem;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+details summary { cursor: pointer; color: var(--primary); margin: 0.6rem 0; }
+
+.precedent { border-top: 1px solid var(--border); padding-top: 0.75rem; margin-top: 0.75rem; }
+
+.draft-item { border-top: 1px solid var(--border); padding: 1rem 0; }
+.draft-item header { margin-bottom: 0.5rem; }
+.actions { display: flex; gap: 0.5rem; }
+
+.filters { display: flex; gap: 1rem; align-items: end; flex-wrap: wrap; }
+.filters label { margin-top: 0; }

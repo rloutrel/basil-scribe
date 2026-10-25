@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load i18n %}
+{% block title %}{% trans "Drafts" %} — Basil {% endblock %}
+{% block content %}
+<section class="card">
+  <h1>{% trans "Draft history" %}</h1>
+  <form method="get" class="filters">
+    <label for="id_type">{% trans "Request type" %}</label>
+    <select name="type" id="id_type" onchange="this.form.submit()">
+      <option value="">{% trans "All" %}</option>
+      {% for rt in request_types %}
+      <option value="{{ rt.key }}" {% if rt.key == type_filter %}selected{% endif %}>{{ rt.name }}</option>
+      {% endfor %}
+    </select>
+    <label for="id_status">{% trans "Status" %}</label>
+    <select name="status" id="id_status" onchange="this.form.submit()">
+      <option value="">{% trans "All" %}</option>
+      <option value="generated" {% if status_filter == 'generated' %}selected{% endif %}>{% trans "Generated" %}</option>
+      <option value="accepted" {% if status_filter == 'accepted' %}selected{% endif %}>{% trans "Accepted" %}</option>
+    </select>
+  </form>
+  {% for draft in drafts %}
+  <article class="draft-item">
+    <header>
+      <strong>#{{ draft.pk }}</strong> — {{ draft.get_request_type_display }} —
+      {{ draft.created_at|date:"Y-m-d H:i" }}
+      {% if draft.status == 'accepted' %}<span class="badge ok">{% trans "Accepted" %}</span>
+      {% else %}<span class="badge">{% trans "Generated" %}</span>{% endif %}
+      {% if draft.added_as_precedent %}<span class="badge ok">{% trans "Precedent" %}</span>{% endif %}
+    </header>
+    <details>
+      <summary>{% trans "Request" %}</summary>
+      <pre>{{ draft.request_text }}</pre>
+    </details>
+    <form method="post" action="{% url 'drafts:accept' draft.pk %}">
+      {% csrf_token %}
+      <label>{% trans "Final version (edit before saving)" %}</label>
+      <textarea name="final_text" rows="8">{{ draft.final_text|default:draft.generated_text }}</textarea>
+      <div class="actions">
+        <button type="submit" class="primary">{% trans "Take over" %}</button>
+        {% if draft.status == 'accepted' and not draft.added_as_precedent %}
+        <button type="submit" formaction="{% url 'drafts:add_precedent' draft.pk %}">{% trans "Add as precedent" %}</button>
+        {% endif %}
+      </div>
+    </form>
+  </article>
+  {% empty %}
+  <p class="muted">{% trans "No drafts yet." %}</p>
+  {% endfor %}
+</section>
+{% endblock %}

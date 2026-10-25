@@ -1,0 +1,411 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: basil-scribe\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Scribe"
+msgstr "Scribe"
+
+msgid "Draft a reply"
+msgstr "Rédiger une réponse"
+
+msgid "Drafts"
+msgstr "Brouillons"
+
+msgid "Active profile"
+msgstr "Profil actif"
+
+msgid "Toggle dark mode"
+msgstr "Basculer le mode sombre"
+
+msgid "Draft history"
+msgstr "Historique des brouillons"
+
+msgid "Request type"
+msgstr "Type de demande"
+
+msgid "All"
+msgstr "Tous"
+
+msgid "Status"
+msgstr "Statut"
+
+msgid "Generated"
+msgstr "Généré"
+
+msgid "Accepted"
+msgstr "Accepté"
+
+msgid "Precedent"
+msgstr "Précédent"
+
+msgid "Request"
+msgstr "Demande"
+
+msgid "Final version (edit before saving)"
+msgstr "Version finale (modifier avant enregistrement)"
+
+msgid "Take over"
+msgstr "Übernehmen"
+
+msgid "Add as precedent"
+msgstr "Ajouter comme précédent"
+
+msgid "No drafts yet."
+msgstr "Aucun brouillon pour l'instant."
+
+msgid "No profile"
+msgstr "Aucun profil"
+
+msgid ""
+"No profile is configured yet. Add a YAML file to the profiles directory and "
+"run check_config --sync."
+msgstr ""
+"Aucun profil n'est configuré. Ajoutez un fichier YAML dans le répertoire des"
+" profils puis lancez check_config --sync."
+
+msgid "{{ count }} precedent pairs available."
+msgstr "{{ count }} paires de précédents disponibles."
+
+msgid "Draft a reply from precedents"
+msgstr "Rédiger une réponse à partir des précédents"
+
+msgid "No precedents extracted yet. Run build_precedents for this profile."
+msgstr ""
+"Aucun précédent extrait pour l'instant. Lancez build_precedents pour ce "
+"profil."
+
+msgid "Request received"
+msgstr "Demande reçue"
+
+msgid "Recipient name (optional)"
+msgstr "Nom du destinataire (optionnel)"
+
+msgid "Request date (optional)"
+msgstr "Date de la demande (optionnel)"
+
+msgid "Generate draft"
+msgstr "Générer le brouillon"
+
+msgid "Draft"
+msgstr "Brouillon"
+
+msgid ""
+"The draft is editable. It is never sent automatically: review it before use."
+msgstr ""
+"Le brouillon est modifiable. Il n'est jamais envoyé automatiquement : "
+"relisez-le avant utilisation."
+
+msgid "Next version"
+msgstr "Version suivante"
+
+msgid "Precedents used"
+msgstr "Précédents utilisés"
+
+msgid "Please paste the text of the request."
+msgstr "Veuillez coller le texte de la demande."
+
+msgid "Please choose a request type."
+msgstr "Veuillez choisir un type de demande."
+
+msgid "Draft generation failed: %(error)s"
+msgstr "Échec de la génération du brouillon : %(error)s"
+
+msgid "The final version cannot be empty."
+msgstr "La version finale ne peut pas être vide."
+
+msgid "Draft saved."
+msgstr "Brouillon enregistré."
+
+msgid "This draft is already a precedent."
+msgstr "Ce brouillon est déjà un précédent."
+
+msgid "Precedent #%(id)d added to the profile index."
+msgstr "Précédent n° %(id)d ajouté à l'index du profil."
+
+msgid "Profile"
+msgstr "Profil"
+
+msgid "Request text"
+msgstr "Texte de la demande"
+
+msgid "Recipient name"
+msgstr "Nom du destinataire"
+
+msgid "Request date"
+msgstr "Date de la demande"
+
+msgid "LLM draft"
+msgstr "Brouillon LLM"
+
+msgid "Final version"
+msgstr "Version finale"
+
+msgid "Added as precedent"
+msgstr "Ajouté comme précédent"
+
+msgid "Created at"
+msgstr "Créé le"
+
+msgid "Updated at"
+msgstr "Mis à jour le"
+
+msgid "Subject keyword"
+msgstr "Mot-clé de sujet"
+
+msgid "Sender domain with type mention"
+msgstr "Domaine d'expéditeur avec mention du type"
+
+msgid "Folder signal"
+msgstr "Signal de dossier"
+
+msgid "In-Reply-To reference"
+msgstr "Référence In-Reply-To"
+
+msgid "Subject + date window heuristic"
+msgstr "Heuristique sujet + fenêtre de dates"
+
+msgid "File path"
+msgstr "Chemin de fichier"
+
+msgid "Folder"
+msgstr "Dossier"
+
+msgid "Sender"
+msgstr "Expéditeur"
+
+msgid "Recipient"
+msgstr "Destinataire"
+
+msgid "Subject"
+msgstr "Sujet"
+
+msgid "Date"
+msgstr "Date"
+
+msgid "Body (plain text)"
+msgstr "Corps (texte brut)"
+
+msgid "Outgoing (sent)"
+msgstr "Sortant (envoyé)"
+
+msgid "Archive mail"
+msgstr "Mail d'archive"
+
+msgid "Archive mails"
+msgstr "Mails d'archive"
+
+msgid "Request mail"
+msgstr "Mail de demande"
+
+msgid "Reply mail"
+msgstr "Mail de réponse"
+
+msgid "Identification criterion"
+msgstr "Critère d'identification"
+
+msgid "Pairing method"
+msgstr "Méthode d'appariement"
+
+msgid "Answer category"
+msgstr "Catégorie de réponse"
+
+msgid "Request embedding"
+msgstr "Embedding de la demande"
+
+msgid "Deduplication key"
+msgstr "Clé de déduplication"
+
+msgid "Precedents"
+msgstr "Précédents"
+
+msgid "Full rebuild"
+msgstr "Reconstruction complète"
+
+msgid "Mails parsed"
+msgstr "Mails analysés"
+
+msgid "Mails skipped"
+msgstr "Mails ignorés"
+
+msgid "Requests identified"
+msgstr "Demandes identifiées"
+
+msgid "Pairs matched"
+msgstr "Paires appariées"
+
+msgid "Requests without reply"
+msgstr "Demandes sans réponse"
+
+msgid "Heuristic matches"
+msgstr "Appariements heuristiques"
+
+msgid "Unmatched outgoing replies"
+msgstr "Réponses sortantes non appariées"
+
+msgid "Ambiguous matches"
+msgstr "Appariements ambigus"
+
+msgid "Per-type counts"
+msgstr "Comptes par type"
+
+msgid "Per-criterion counts"
+msgstr "Comptes par critère"
+
+msgid "Extraction report"
+msgstr "Rapport d'extraction"
+
+msgid "Extraction reports"
+msgstr "Rapports d'extraction"
+
+msgid "Classification finished: %(ok)d classified, %(failed)d failed."
+msgstr "Classification terminée : %(ok)d classées, %(failed)d échecs."
+
+msgid "%(failed)d classification(s) failed; re-run to retry them."
+msgstr "%(failed)d classification(s) en échec ; relancez pour les retraiter."
+
+msgid "Mails parsed: %(count)d"
+msgstr "Mails analysés : %(count)d"
+
+msgid "Mails skipped (unreadable or empty): %(count)d"
+msgstr "Mails ignorés (illisibles ou vides) : %(count)d"
+
+msgid "Requests identified: %(count)d"
+msgstr "Demandes identifiées : %(count)d"
+
+msgid "- %(type)s: %(count)d"
+msgstr "  - %(type)s : %(count)d"
+
+msgid "- criterion '%(criterion)s': %(count)d"
+msgstr "  - critère « %(criterion)s » : %(count)d"
+
+msgid "Pairs matched: %(count)d"
+msgstr "Paires appariées : %(count)d"
+
+msgid "Requests without reply: %(count)d"
+msgstr "Demandes sans réponse : %(count)d"
+
+msgid "Heuristic (subject + window) matches: %(count)d"
+msgstr "Appariements heuristiques (sujet + fenêtre) : %(count)d"
+
+msgid "Unmatched outgoing replies: %(count)d"
+msgstr "Réponses sortantes non appariées : %(count)d"
+
+msgid "Ambiguous mails (first type kept): %(count)d"
+msgstr "Mails ambigus (premier type conservé) : %(count)d"
+
+msgid "Profile name"
+msgstr "Nom du profil"
+
+msgid "Displayed name"
+msgstr "Nom affiché"
+
+msgid "File name"
+msgstr "Nom de fichier"
+
+msgid "Language"
+msgstr "Langue"
+
+msgid "Mail source folder"
+msgstr "Dossier source des mails"
+
+msgid "Organization"
+msgstr "Organisation"
+
+msgid "Greeting form"
+msgstr "Formule d'appel"
+
+msgid "Signature"
+msgstr "Signature"
+
+msgid "Business rules"
+msgstr "Règles métier"
+
+msgid "Role prompt"
+msgstr "Prompt de rôle"
+
+msgid "Generation temperature"
+msgstr "Température de génération"
+
+msgid "Request types"
+msgstr "Types de demande"
+
+msgid "Context enabled"
+msgstr "Contexte activé"
+
+msgid "Enabled"
+msgstr "Activé"
+
+msgid "Profiles"
+msgstr "Profils"
+
+msgid "Success"
+msgstr "Succès"
+
+msgid "Errors"
+msgstr "Erreurs"
+
+msgid "Profile sync result"
+msgstr "Résultat de synchronisation de profil"
+
+msgid "Profile sync results"
+msgstr "Résultats de synchronisation de profils"
+
+msgid "Missing key '%(key)s' in profile file."
+msgstr "Clé manquante « %(key)s » dans le fichier de profil."
+
+msgid "Key '%(key)s' must be a non-empty string."
+msgstr "La clé « %(key)s » doit être une chaîne non vide."
+
+msgid "Key '%(key)s' must be a list of strings."
+msgstr "La clé « %(key)s » doit être une liste de chaînes."
+
+msgid "Key '%(key)s' must be a non-empty list of strings."
+msgstr "La clé « %(key)s » doit être une liste non vide de chaînes."
+
+msgid "Key '%(key)s' must only contain non-empty strings."
+msgstr "La clé « %(key)s » ne doit contenir que des chaînes non vides."
+
+msgid "Invalid YAML: %(error)s"
+msgstr "YAML invalide : %(error)s"
+
+msgid "Invalid YAML: the file must contain a mapping."
+msgstr "YAML invalide : le fichier doit contenir un mapping."
+
+msgid "Key 'profile' must be a mapping."
+msgstr "La clé « profile » doit être un mapping."
+
+msgid "Key '%(key)s' must be one of: %(codes)s."
+msgstr "La clé « %(key)s » doit valoir l'une des valeurs : %(codes)s."
+
+msgid "Key 'organization' must be a mapping."
+msgstr "La clé « organization » doit être un mapping."
+
+msgid "Key '%(key)s' must be a string."
+msgstr "La clé « %(key)s » doit être une chaîne."
+
+msgid "Key 'temperature' must be a number."
+msgstr "La clé « temperature » doit être un nombre."
+
+msgid "Key 'request_types' must be a mapping with at least one entry."
+msgstr ""
+"La clé « request_types » doit être un mapping avec au moins une entrée."
+
+msgid "Request type '%(type)s' must be a mapping."
+msgstr "Le type de demande « %(type)s » doit être un mapping."
+
+msgid "Request type '%(type)s' must define at least one answer category."
+msgstr ""
+"Le type de demande « %(type)s » doit définir au moins une catégorie de "
+"réponse."
+
+msgid "Key 'context' must be a mapping."
+msgstr "La clé « context » doit être un mapping."
+
+msgid "The profile is invalid: %(count)d error(s)."
+msgstr "Le profil est invalide : %(count)d erreur(s)."
